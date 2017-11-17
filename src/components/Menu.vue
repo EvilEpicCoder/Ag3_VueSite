@@ -1,5 +1,8 @@
 <template>
-<div> {{ name }} </div>
+<div>
+
+<button v-for="all in name" :key="all.key" v-on:click="test(valid[all])">{{all}}</button>
+</div>
 </template>
 
 <script>
@@ -7,14 +10,22 @@ export default {
   component: 'Menu',
   data () {
     return {
-      name: 'Navbar'
+      name: [
+        'Menu',
+        'Меню'
+      ],
+      valid: {
+        Menu: 'en',
+        Меню: 'ru'
+      }
     }
   },
   methods: {
     is_working: function () {
       alert('is working ok')
     },
-    test: () => alert('test ok')
+    test: (el) => alert(el + ' test ok')
+
   }
 }
 </script>
