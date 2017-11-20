@@ -1,64 +1,64 @@
 <template>
 <div id="menu">
 
-  <label>Поиск : {{ search }}</label>
+  <!-- <label>Поиск : {{ search }}</label>
   <input  id="suckThis" v-model="search" type="text" v-on:keyup="keyPress(search)" v-on:keyup.enter="goGo()"/>
   <button class="search" autofocus v-on:click="update(context.that)">Поиск</button>
-  <button class="search" autofocus v-on:click="updateCountry">updateCountry</button>
+  <button class="search" autofocus v-on:click="updateCountry">updateCountry</button> -->
 </div>
 </template>
 
 <script>
 export default {
-  props: [
-    'geo',
-    'weatherData',
-    'context',
-    'update'
-  ],
-  data () {
-    return {
-      search: {
-        data: 'Ukraine, Kiev'
-      }
-    }
-  },
-  methods: {
-    updateCountry: function () {
-      alert(this.search.data)
-      this.geo.country = 'texas'
-      this.geo.city = 'USA'
-    },
-    keyPress: function (ele) {
-      this.search.data = ele.target.value
-      console.log(this.search.data.split(','))
-      if (this.search.data[0] !== undefined && this.search.data[0].lenght > 2) {
-        if (this.search.data[1] !== undefined && this.search.data[1].lenght > 2) {
-          this.geo.country = this.search.data[0]
-          this.geo.city = this.search.data[1]
-          this.update()
-        }
-      }
-    }
-  },
-  computed: {
-    goGo: function (ele) {
-      this.search.data = ele.target.value
-      console.log(this.search.data.split(','))
-      if (this.search.data[0] !== undefined && this.search.data[0].lenght > 3) {
-        if (this.search.data[1] !== undefined && this.search.data[1].lenght > 3) {
-          this.geo.country = this.search.data[0]
-          this.geo.city = this.search.data[1]
-          this.update()
-        }
-      }
-    }
-  }
+  // props: [
+  //   'geo',
+  //   'weatherData',
+  //   'context',
+  //   'update'
+  // ],
+  // data () {
+  //   return {
+  //     search: {
+  //       data: 'Ukraine, Kiev'
+  //     }
+  //   }
+  // },
+  // methods: {
+  //   updateCountry: function () {
+  //     alert(this.search.data)
+  //     this.geo.country = 'Ukraine'
+  //     this.geo.city = 'Odessa'
+  //   },
+  //   keyPress: function (ele) {
+  //     this.search.data = ele.target.value
+  //     console.log(this.search.data.split(','))
+  //     if (this.search.data[0] !== undefined && this.search.data[0].lenght > 2) {
+  //       if (this.search.data[1] !== undefined && this.search.data[1].lenght > 2) {
+  //         this.geo.country = this.search.data[0]
+  //         this.geo.city = this.search.data[1]
+  //         this.update()
+  //       }
+  //     }
+  //   }
+  // },
+  // computed: {
+  //   goGo: function (ele) {
+  //     this.search.data = ele.target.value
+  //     console.log(this.search.data.split(','))
+  //     if (this.search.data[0] !== undefined && this.search.data[0].lenght > 3) {
+  //       if (this.search.data[1] !== undefined && this.search.data[1].lenght > 3) {
+  //         this.geo.country = this.search.data[0]
+  //         this.geo.city = this.search.data[1]
+  //         this.update()
+  //       }
+  //     }
+  //   }
+  // }
 }
 </script>
 
 <style>
-#menu{
+/*#menu{
   display: flex;
   height: 80px;
   width:400px;
@@ -66,7 +66,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   position: relative;
-}
+}*/
 /*input:focus, label ,button.search{
 position: absolute;
 font-size: 12px;

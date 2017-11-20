@@ -1,15 +1,16 @@
 <template>
   <div id="app">
     <h1> Weather </h1>
-    <h2>{{search.data}}</h2>
+    <h2>{{ search.data }}</h2>
+    <h3> {{ goGo }}</h3>
     <div class="container">
       <div class="row justify-center">
         <div class="search-box">
-          <form action="#" v-on:submit.prevent="geoCode()">
+          <form action="#" v-on:submit.prevent="keyPress()">
             <!-- <input v-model="search.data" placeholder="Enter city to search..." v-on:change="keyPress(search.data)"> -->
-            <input v-model="search.data" placeholder="-----">
-            <input type="submit" value="Search">
-            <button v-on:click="keyPress()">Search</button>
+            <input type="search" v-model="search.data" placeholder="-----">
+            <input type="submit" v-on:click="keyPress" value="Search">
+            <!-- <button v-on:click="">Search</button> -->
           </form>
         </div>
       </div>
@@ -21,16 +22,17 @@
             <span class="weather-icon">
               <img v-bind:src="weatherIcons[weatherData.currWea]" alt="weather-icon">
             </span>
-            <p class="temperature">{{weatherData.currTemp}}&deg;</p>
+            <p class="temperature">{{ weatherData.currTemp }}&deg;C</p>
           </div>
           <div class="weather-information">
             <ul class="condition-list">
-              <li>{{geo.code}}</li>
-              <li>Latitude: {{geo.posX }}</li>
-              <li>Longitude: {{geo.posY }}</li>
-              <li>Condition: {{weatherData.currWea}} </li>
+              <li>{{ geo.code }}</li>
+              <li>Latitude: {{ geo.posX }}</li>
+              <li>Longitude: {{ geo.posY }}</li>
+              <li>Condition: {{ weatherData.currWea }} </li>
               <li>Location: {{ geo.city }}</li>
-              <li>Visibility: {{ weatherData.currVis }}</li>
+              <li>Visibility: {{ weatherData.currVis }} Km</li>
+              <li>Wind speed: {{ weatherData.currWind }} Km/h</li>
             </ul>
           </div>
         </div>
@@ -40,7 +42,7 @@
     <div class="container">
       <div class="row justify-center">
         <div class="location">
-          <p>Current location: {{ geo.city }} , {{ geo.code }} </p>
+          <p>Current location: {{ geo.city }} </p>
         </div>
       </div>
     </div>
@@ -64,11 +66,11 @@ export default {
   data () {
     return {
       search: {
-        data: 'Ukraine, Kiev'
+        data: 'Odessa, Ukraine'
       },
       geo: {
-        code: 'undef',
-        country: 'undef',
+        code: 'Odessa',
+        country: 'Ukraine',
         city: 'undef',
         posX: 'undef',
         posY: 'undef'
@@ -84,12 +86,14 @@ export default {
         dataCode: 'tgeo.item.forecast.code',
         currTemp: 'fuck off',
         currVis: 'blind as ass',
-        currWea: 'total shit'
+        currWea: 'total shit',
+        currWind: 'Not set'
       },
       weatherIcons: {
         'Partly Cloud': 'src/assets/assets/weather-icons/partly-cloudy.svg',
         'Partly Cloudy': 'src/assets/assets/weather-icons/partly-cloudy.svg',
         'Sunny': 'src/assets/assets/weather-icons/sunny.svg',
+        'Breezy': 'src/assets/assets/weather-icons/partly-cloudy.svg',
         'Fair': 'src/assets/assets/weather-icons/sunny.svg',
         'Clear': 'src/assets/assets/weather-icons/sunny.svg',
         'Mostly Sunny': 'src/assets/assets/weather-icons/sunny.svg',
@@ -109,7 +113,7 @@ export default {
         'Heavy Rain': 'src/assets/assets/weather-icons/hail.svg',
         'Light Rain': 'src/assets/assets/weather-icons/rain-mix.svg',
         'AM Showers': 'src/assets/assets/weather-icons/hail.svg',
-        'Scattered Shhowers': 'src/assets/assets/weather-icons/hail.svg',
+        'Scattered Showers': 'src/assets/assets/weather-icons/hail.svg',
         'PM Showers': 'src/assets/assets/weather-icons/hail.svg',
         'Rain And Snow': 'src/assets/assets/weather-icons/rain-mix.svg',
         'Snow': 'src/assets/assets/weather-icons/snow.svg'
@@ -118,8 +122,7 @@ export default {
   },
   methods: {
     keyPress: function () {
-      // this.search.data = ele
-      console.log('ok')
+      console.log('You still thinking this works?')
     },
     ipApi: (sData) => {
       var xhttp
@@ -129,11 +132,10 @@ export default {
           let tgeo = JSON.parse(this.responseText)
           // console.log(tgeo)
           sData.code = tgeo.country_code
-          // console.log(codeS)
           sData.country = tgeo.country_name
-          // console.log(countryS)
           sData.city = tgeo.city
-          // console.log(cityS)
+          sData.posX = tgeo.latitude.toString()
+          sData.posY = tgeo.longitude.toString()
         }
       }
       xhttp.open('GET', 'https://freegeoip.net/json/', true)
@@ -146,13 +148,16 @@ export default {
         if (this.readyState === 4 && this.status === 200) {
           let tgeo = JSON.parse(this.responseText)
           console.log(tgeo)
-          wData.currVis = tgeo.query.results.channel.atmosphere.visibility
-          wData.currTemp = tgeo.query.results.channel.item.condition.temp
-          wData.currWea = tgeo.query.results.channel.item.condition.text
-          // wData.date = tgeo.query.results.channel[0].item.forecast.date
-          // wData.tempH = tgeo.query.results.channel[0].item.forecast.high
-          // wData.tempL = tgeo.query.results.channel[0].item.forecast.low
-          // wData.dataCode = tgeo.query.results.channel[0].item.forecast.code
+          if (tgeo.query.results !== null) {
+            wData.currVis = tgeo.query.results.channel.atmosphere.visibility.toString()
+            wData.currTemp = tgeo.query.results.channel.item.condition.temp.toString()
+            wData.currWea = tgeo.query.results.channel.item.condition.text.toString()
+            wData.currWind = tgeo.query.results.channel.wind.speed.toString()
+            // wData.date = tgeo.query.results.channel[0].item.forecast.date
+            // wData.tempH = tgeo.query.results.channel[0].item.forecast.high
+            // wData.tempL = tgeo.query.results.channel[0].item.forecast.low
+            // wData.dataCode = tgeo.query.results.channel[0].item.forecast.code
+          }
         }
       }
       xhttp.open('GET', 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + pData.city + ',' + pData.code + "%22)and%20u%3D'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys", true)
@@ -179,45 +184,28 @@ export default {
           xhttp.send()
         },
         go.that.ipApi(gh))
-        // showWeather(globalCityCountry);
       } else {
         console.log(go.that)
         console.log(gh)
         go.that.ipApi(gh) // Alternative service find by IP
-        //  showDialogueWindow();//if Alternative service OK user click OK, if not, enter City and country manualy
-        //  showWeather(globalCityCountry);
       }
-    },
-    geoCode: () => {
-      // this.search.data = ele.target.value
-      console.log(this.search.data.split(','))
-      if (this.search.data[0] !== undefined && this.search.data[0].lenght > 2) {
-        if (this.search.data[1] !== undefined && this.search.data[1].lenght > 2) {
-          this.geo.country = this.search.data[0]
-          this.geo.city = this.search.data[1]
-          // this.update()
-        }
-      }
-    },
-    Showtype: (virtulaX) => {
-      console.log(typeof (virtulaX.geo.code) + virtulaX.geo.code)
-      console.log(typeof (virtulaX.geo.country) + virtulaX.geo.country)
-      console.log(typeof (virtulaX.geo.city) + virtulaX.geo.city)
-      console.log(typeof (virtulaX.geo.posX) + virtulaX.geo.posX)
-      console.log(typeof (virtulaX.geo.poxY) + virtulaX.geo.poxY)
     }
   },
   computed: {
-
+    goGo: function () {
+      this.search.data.toString()
+      console.log(this.search.data.lenght)
+      // this.search.data.split(',')
+      this.geo.city = this.search.data
+      this.geo.country = ', '
+      this.getYahooWeather(this.geo, this.weatherData)
+    }
   },
   created () {
     this.getYahooWeather(this.geo, this.weatherData)
     console.log('step 2')
     this.initWeather(this.context, this.geo)
     console.log('step 1')
-    console.log('step 3')
-    this.getYahooWeather(this.geo, this.weatherData)
-    // do something after creating vue instance
   },
   beforeMount () {
   }
@@ -297,10 +285,10 @@ export default {
        flex-basis: 50%;
        background: $background_color1;
        ul.condition-list{
-
+         text-align:left;
          list-style: none;
-         padding-top: 45px;
-         padding-left: 10px;
+         padding-top: 20px;
+         padding-left: 60px;
          padding-right: 10px;
          li{
            color: $font_color;
