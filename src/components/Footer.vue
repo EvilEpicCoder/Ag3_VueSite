@@ -1,5 +1,5 @@
 <template>
-<div> {{ title }} </div>
+<div>{{ title }}</div>
 </template>
 
 <script>
@@ -7,7 +7,7 @@ export default {
   component: 'Footer',
   data () {
     return {
-      title: 'Copyright 2017'
+      title: 'Copyright'
     }
   },
   methods: {

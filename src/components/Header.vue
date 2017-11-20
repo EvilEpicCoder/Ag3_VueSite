@@ -1,50 +1,26 @@
 <template>
 <div>
-  <div> {{ geodata.code }} </div>
-  <div> {{ geodata.city }} </div>
-  <div> {{ geodata.country }} </div>
+  <h1> Прогноз погоды в Vue</h1>
+  <h2> Актуально на {{ weatherData.day }},{{ weatherData.date }}</h2>
+  <h3> Вы находитесь в {{ geo.country }} , {{ geo.city }}</h3>
 </div>
 </template>
 
 <script>
 export default {
-  component: 'Header',
-  data () {
+  props: [
+    'geo',
+    'weatherData'
+  ],
+  data  () {
     return {
-      title: 'EEC Portfolio',
-      user: {
-        firstname: 'Igor',
-        lastname: 'Gavelyuk'
-      },
-      geodata: {
-        code: 'code is unset',
-        country: 'country is unset',
-        city: 'city is unset'
-      }
+      header: 'header'
     }
   },
   methods: {
-    is_working: function () {
-      alert('is working ok')
-    },
-    test: () => alert('test ok'),
-    ipApi: (superKey) => {
-      var xhttp
-      xhttp = new XMLHttpRequest()
-      xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-          let tgeo = JSON.parse(this.responseText)
-          superKey.code = tgeo.country_code
-          superKey.country = tgeo.country_name
-          superKey.city = tgeo.city
-        }
-      }
-      xhttp.open('GET', 'https://freegeoip.net/json/', true)
-      xhttp.send()
+    compute (val) {
+      alert(val.country)
     }
-  },
-  beforeMount () {
-    this.ipApi(this.geodata)
   }
 }
 </script>
